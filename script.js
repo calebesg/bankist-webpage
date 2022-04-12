@@ -5,8 +5,11 @@
 
 const modal = document.querySelector('.modal');
 const overlay = document.querySelector('.overlay');
+const section1 = document.getElementById('section--1');
+
 const btnCloseModal = document.querySelector('.btn--close-modal');
 const btnsOpenModal = document.querySelectorAll('.btn--show-modal');
+const btnScroll = document.querySelector('.btn--scroll-to');
 
 const openModal = function (event) {
   event.preventDefault();
@@ -28,4 +31,22 @@ document.addEventListener('keydown', function (e) {
   if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
     closeModal();
   }
+});
+
+// IMPLEMENTING SMOOTH SCROLL
+//////////////////////////////////////////////////////
+
+btnScroll.addEventListener('click', event => {
+  const { left, top } = section1.getBoundingClientRect();
+
+  console.log('X/Y: ', window.pageXOffset, window.pageYOffset);
+
+  window.scrollTo({
+    left: left + window.pageXOffset,
+    top: top + window.pageYOffset,
+    behavior: 'smooth',
+  });
+
+  // EXPERIMENTAL
+  // section1.scrollIntoView({ behavior: 'smooth', block: 'center' });
 });
