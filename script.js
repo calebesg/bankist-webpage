@@ -1,5 +1,6 @@
 'use strict';
 
+const header = document.querySelector('.header');
 const nav = document.querySelector('.nav');
 
 const modal = document.querySelector('.modal');
@@ -70,24 +71,43 @@ btnLearnMore.addEventListener('click', event => {
 /////////////////////////////////////////////////////
 // MENU FADE EFFECT
 
-const handlerHover = function (e, opacity) {
+const handlerHover = function (e) {
   if (e.target.classList.contains('nav__link') === false) return;
 
   const link = e.target;
   const siblings = link.closest('.nav').querySelectorAll('.nav__link');
   const logo = link.closest('.nav').querySelector('img');
 
-  siblings.forEach(el => el !== link && (el.style.opacity = opacity));
-  logo.style.opacity = opacity;
+  siblings.forEach(el => el !== link && (el.style.opacity = this));
+  logo.style.opacity = this;
 };
 
-nav.addEventListener('mouseover', e => handlerHover(e, 0.5));
+nav.addEventListener('mouseover', handlerHover.bind(0.5));
 
-nav.addEventListener('mouseout', e => handlerHover(e, 1));
+nav.addEventListener('mouseout', handlerHover.bind(1));
+
+/////////////////////////////////////////////////////
+// STICKY NAVIGATION -> fixed menu in the page top, using OBSERVERS
+
+const stickyNav = function (entries) {
+  const [entry] = entries;
+
+  if (entry.isIntersecting === false) nav.classList.add('sticky');
+  else nav.classList.remove('sticky');
+};
+
+const navHeight = nav.getBoundingClientRect().height;
+
+const headerObserver = new IntersectionObserver(stickyNav, {
+  root: null,
+  threshold: 0,
+  rootMargin: `-${navHeight}px`,
+});
+
+headerObserver.observe(header);
 
 /////////////////////////////////////////////////////
 // TABBED COMPONENT
-
 tabsContainer.addEventListener('click', e => {
   const clicked = e.target.closest('.operations__tab');
 
