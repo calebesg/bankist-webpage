@@ -1,8 +1,5 @@
 'use strict';
 
-///////////////////////////////////////
-// Modal window
-
 const modal = document.querySelector('.modal');
 const overlay = document.querySelector('.overlay');
 const section1 = document.getElementById('section--1');
@@ -10,6 +7,13 @@ const section1 = document.getElementById('section--1');
 const btnCloseModal = document.querySelector('.btn--close-modal');
 const btnsOpenModal = document.querySelectorAll('.btn--show-modal');
 const btnLearnMore = document.querySelector('.btn--scroll-to');
+
+const tabs = document.querySelectorAll('.operations__tab');
+const tabsContainer = document.querySelector('.operations__tab-container');
+const tabsContent = document.querySelectorAll('.operations__content');
+
+///////////////////////////////////////
+// Modal window
 
 const openModal = function (event) {
   event.preventDefault();
@@ -33,8 +37,9 @@ document.addEventListener('keydown', function (e) {
   }
 });
 
-// IMPLEMENTING SMOOTH SCROLL
 //////////////////////////////////////////////////////
+// IMPLEMENTING SMOOTH SCROLL
+
 document.querySelector('.nav__links').addEventListener('click', e => {
   if (e.target.classList.contains('nav__link') === false) return -1;
 
@@ -58,4 +63,22 @@ btnLearnMore.addEventListener('click', event => {
 
   // EXPERIMENTAL
   // section1.scrollIntoView({ behavior: 'smooth', block: 'center' });
+});
+
+/////////////////////////////////////////////////////
+// TABBED COMPONENT
+
+tabsContainer.addEventListener('click', e => {
+  const clicked = e.target.closest('.operations__tab');
+
+  if (clicked === null) return;
+
+  // REMOVE ACTIVE STATE
+  tabs.forEach(t => t.classList.remove('operations__tab--active'));
+  tabsContent.forEach(c => c.classList.remove('operations__content--active'));
+
+  clicked.classList.add('operations__tab--active');
+  document
+    .querySelector(`.operations__content--${clicked.dataset.tab}`)
+    .classList.add('operations__content--active');
 });
