@@ -9,7 +9,7 @@ const section1 = document.getElementById('section--1');
 
 const btnCloseModal = document.querySelector('.btn--close-modal');
 const btnsOpenModal = document.querySelectorAll('.btn--show-modal');
-const btnScroll = document.querySelector('.btn--scroll-to');
+const btnLearnMore = document.querySelector('.btn--scroll-to');
 
 const openModal = function (event) {
   event.preventDefault();
@@ -35,8 +35,17 @@ document.addEventListener('keydown', function (e) {
 
 // IMPLEMENTING SMOOTH SCROLL
 //////////////////////////////////////////////////////
+document.querySelector('.nav__links').addEventListener('click', e => {
+  if (e.target.classList.contains('nav__link') === false) return -1;
 
-btnScroll.addEventListener('click', event => {
+  e.preventDefault();
+
+  const id = e.target.getAttribute('href');
+
+  document.querySelector(id).scrollIntoView({ behavior: 'smooth' });
+});
+
+btnLearnMore.addEventListener('click', event => {
   const { left, top } = section1.getBoundingClientRect();
 
   console.log('X/Y: ', window.pageXOffset, window.pageYOffset);
