@@ -1,5 +1,7 @@
 'use strict';
 
+const nav = document.querySelector('.nav');
+
 const modal = document.querySelector('.modal');
 const overlay = document.querySelector('.overlay');
 const section1 = document.getElementById('section--1');
@@ -64,6 +66,24 @@ btnLearnMore.addEventListener('click', event => {
   // EXPERIMENTAL
   // section1.scrollIntoView({ behavior: 'smooth', block: 'center' });
 });
+
+/////////////////////////////////////////////////////
+// MENU FADE EFFECT
+
+const handlerHover = function (e, opacity) {
+  if (e.target.classList.contains('nav__link') === false) return;
+
+  const link = e.target;
+  const siblings = link.closest('.nav').querySelectorAll('.nav__link');
+  const logo = link.closest('.nav').querySelector('img');
+
+  siblings.forEach(el => el !== link && (el.style.opacity = opacity));
+  logo.style.opacity = opacity;
+};
+
+nav.addEventListener('mouseover', e => handlerHover(e, 0.5));
+
+nav.addEventListener('mouseout', e => handlerHover(e, 1));
 
 /////////////////////////////////////////////////////
 // TABBED COMPONENT
