@@ -12,13 +12,14 @@ const btnCloseModal = document.querySelector('.btn--close-modal');
 const btnsOpenModal = document.querySelectorAll('.btn--show-modal');
 const btnLearnMore = document.querySelector('.btn--scroll-to');
 
+const allImages = document.querySelectorAll('img[data-src]');
+
 const tabs = document.querySelectorAll('.operations__tab');
 const tabsContainer = document.querySelector('.operations__tab-container');
 const tabsContent = document.querySelectorAll('.operations__content');
 
 ///////////////////////////////////////
 // Modal window
-
 const openModal = function (event) {
   event.preventDefault();
   modal.classList.remove('hidden');
@@ -43,7 +44,6 @@ document.addEventListener('keydown', function (e) {
 
 //////////////////////////////////////////////////////
 // IMPLEMENTING SMOOTH SCROLL
-
 document.querySelector('.nav__links').addEventListener('click', e => {
   if (e.target.classList.contains('nav__link') === false) return -1;
 
@@ -71,7 +71,6 @@ btnLearnMore.addEventListener('click', event => {
 
 /////////////////////////////////////////////////////
 // MENU FADE EFFECT
-
 const handlerHover = function (e) {
   if (e.target.classList.contains('nav__link') === false) return;
 
@@ -89,7 +88,6 @@ nav.addEventListener('mouseout', handlerHover.bind(1));
 
 /////////////////////////////////////////////////////
 // STICKY NAVIGATION -> fixed menu in the page top, using OBSERVERS
-
 const stickyNav = function (entries) {
   const [entry] = entries;
 
@@ -109,13 +107,10 @@ headerObserver.observe(header);
 
 /////////////////////////////////////////////////////
 // REVEAL SECTIONS
-
 const revealSection = function (entries, observer) {
   const [entry] = entries;
 
   if (entry.isIntersecting === false) return;
-
-  console.log(entry);
 
   entry.target.classList.remove('section--hidden');
   observer.unobserve(entry.target);
@@ -128,13 +123,11 @@ const sectionObserver = new IntersectionObserver(revealSection, {
 
 allSections.forEach(section => {
   sectionObserver.observe(section);
-  section.classList.add('section--hidden');
+  // section.classList.add('section--hidden');
 });
 
 /////////////////////////////////////////////////////
 // LAZY LOAD
-const allImages = document.querySelectorAll('img[data-src]');
-
 const loadImage = function (entries, observer) {
   const [entry] = entries;
 
@@ -173,3 +166,83 @@ tabsContainer.addEventListener('click', e => {
     .querySelector(`.operations__content--${clicked.dataset.tab}`)
     .classList.add('operations__content--active');
 });
+
+//////////////////////////////////////////////////////
+// SLIDER
+
+const slider = function () {
+  const slides = document.querySelectorAll('.slide');
+  const btnLeft = document.querySelector('.slider__btn--left');
+  const btnRight = document.querySelector('.slider__btn--right');
+  const dotContainer = document.querySelector('.dots');
+
+  let curSlide = 0;
+  const maxSlide = slides.length - 1;
+
+  const createDots = () => {
+    slides.forEach((_, i) => {
+      dotContainer.insertAdjacentHTML(
+        'beforeend',
+        `<button class="dots__dot" data-slide="${i}"></button>`
+      );
+    });
+  };
+
+  const activateDot = slide => {
+    document
+      .querySelectorAll('.dots__dot')
+      .forEach(dot => dot.classList.remove('dots__dot--active'));
+
+    document
+      .querySelector(`.dots__dot[data-slide="${slide}"]`)
+      .classList.add('dots__dot--active');
+  };
+
+  const goToSlide = slide => {
+    slides.forEach((s, i) => {
+      s.style.transform = `translateX(${100 * (i - slide)}%)`;
+    });
+
+    activateDot(slide);
+  };
+
+  const nextSlide = () => {
+    if (curSlide === maxSlide) curSlide = 0;
+    else curSlide++;
+
+    goToSlide(curSlide);
+  };
+
+  const prevSlide = () => {
+    if (curSlide === 0) curSlide = maxSlide;
+    else curSlide--;
+
+    goToSlide(curSlide);
+  };
+
+  const init = () => {
+    createDots();
+    activateDot(0);
+    goToSlide(0);
+  };
+  init();
+
+  btnRight.addEventListener('click', nextSlide);
+  btnLeft.addEventListener('click', prevSlide);
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight') nextSlide();
+    e.key === 'ArrowLeft' && prevSlide();
+  });
+
+  dotContainer.addEventListener('click', e => {
+    if (e.target.classList.contains('dots__dot') === false) return;
+
+    const { slide } = e.target.dataset;
+    curSlide = slide;
+
+    goToSlide(curSlide);
+  });
+};
+
+slider();
